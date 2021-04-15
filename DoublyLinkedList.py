@@ -1,7 +1,7 @@
 class Item:
-    def __init__(self, x):
+    def __init__(self, value):
         self.prev = None
-        self.x = x
+        self.value = value
         self.next = None
 
 
@@ -37,17 +37,17 @@ class DoublyLinkedList:
         self.head.next = self.tail
         self.tail.prev = self.head
 
-    def insert(self, x):
-        item = Item(x)
+    def insert(self, value):
+        item = Item(value)
         item.next = self.head.next
         self.head.next = item
         item.next.prev = item
         item.prev = self.head
 
-    def delete(self, x):
+    def delete(self, value):
         tmp = self.head.next
         while tmp is not self.tail:
-            if tmp.x == x:
+            if tmp.value == value:
                 tmp.prev.next = tmp.next
                 tmp.next.prev = tmp.prev
                 return
@@ -69,7 +69,7 @@ class DoublyLinkedList:
         tmp = self.head.next
         result = ""
         while tmp is not self.tail:
-            result = result + " " + str(tmp.x)
+            result = result + " " + str(tmp.value)
             tmp = tmp.next
         result = result[1:]
         print(result)
@@ -99,18 +99,18 @@ class DoubleDataDoublyLinkedList(DoublyLinkedList):
     C9
     """
 
-    def insert(self, x):
-        picture = x[0]
-        value = int(x[1])
+    def insert(self, raw_input):
+        picture = raw_input[0]
+        value = int(raw_input[1])
         super(DoubleDataDoublyLinkedList, self).insert(value)
         self.head.next.picture = picture
 
-    def delete(self, x):
-        picture = x[0]
-        value = int(x[1])
+    def delete(self, raw_input):
+        picture = raw_input[0]
+        value = int(raw_input[1])
         tmp = self.head.next
         while tmp is not self.tail:
-            if tmp.x == value and tmp.picture == picture:
+            if tmp.value == value and tmp.picture == picture:
                 tmp.prev.next = tmp.next
                 tmp.next.prev = tmp.prev
                 return
@@ -120,7 +120,7 @@ class DoubleDataDoublyLinkedList(DoublyLinkedList):
         tmp = self.head.next
         result = ""
         while tmp is not self.tail:
-            result = result + " " + tmp.picture + str(tmp.x)
+            result = result + " " + tmp.picture + str(tmp.value)
             tmp = tmp.next
         result = result[1:]
         print(result)
@@ -129,7 +129,7 @@ class DoubleDataDoublyLinkedList(DoublyLinkedList):
         dll_copy = DoubleDataDoublyLinkedList()
         original = self.tail.prev
         while original is not self.head:
-            dll_copy.insert(original.picture + str(original.x))
+            dll_copy.insert(original.picture + str(original.value))
             original = original.prev
         return dll_copy
 
