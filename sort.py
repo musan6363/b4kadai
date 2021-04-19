@@ -63,13 +63,10 @@ def insertion_sort(sort_target):
             new_target = ct.next
 
             # sortedの後ろにcomparison_targetを挿入
-            # 改善点: swap関数としてまとめたほうが良いかも．
-            ct.prev.next = ct.next
-            ct.next.prev = ct.prev
-            ct.next = sorted.next
-            ct.prev = sorted
-            sorted.next.prev = ct
-            sorted.next = ct
+            # 交換ではなく，挿入なのでswapメソッドは使えない．
+            # a(sorted) - b - c - d(comparison_target) - e を
+            # a         - d - b - c                    - d にする
+            sort_target.insert_move(sorted, ct)
 
             ct = new_target
             sort_target.show()
@@ -206,8 +203,8 @@ def selection_sort(sort_target):
                     count_flag = True
                 target = target.next
 
-            # # a(unsorted_top) - b - c - d(min) - e を
-            # # d(unsorted_top) - b - c - a      - e にする
+            # a(unsorted_top) - b - c - d(min) - e を
+            # d(unsorted_top) - b - c - a      - e にする
             sort_target.swap(unsorted_top, min)
 
             unsorted_top = min.next

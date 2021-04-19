@@ -94,6 +94,16 @@ class DoublyLinkedList:
             swap_target_y.next = swap_target_x   # (y -> y)  =>  (y -> x)
             swap_target_x.prev = swap_target_y   # (x <- x)  =>  (y <- x)
 
+    def insert_move(self, destination_prev, target):
+        # a(destination_prev) - b - c - d(target) - e を
+        # a                   - d - b - c         - d にする
+        target.prev.next = target.next       # (c -> d)  =>  (c -> e)
+        target.next.prev = target.prev       # (d <- e)  =>  (c <- e)
+        target.next = destination_prev.next  # (d -> e)  =>  (d -> b)
+        destination_prev.next.prev = target  # (a <- b)  =>  (d <- b)
+        target.prev = destination_prev       # (c <- d)  =>  (a <- d)
+        destination_prev.next = target       # (a -> b)  =>  (a -> d)
+
 
 class DoubleDataDoublyLinkedList(DoublyLinkedList):
     """
