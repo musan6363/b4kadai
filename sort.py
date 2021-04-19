@@ -128,15 +128,7 @@ def bubble_sort(sort_target):
 
                     # a(tmp_prev) - b(tmp_next) - c(target) - d  を
                     # a           - c           - b         - d  に入れ替える
-                    # 改善点: swap関数としてまとめたほうが良いかも．
-                    tmp_prev = target.prev.prev
-                    tmp_next = target.prev
-                    target.prev.prev.next = target
-                    target.prev.prev = target
-                    target.prev.next = target.next
-                    target.next.prev = target.prev
-                    target.prev = tmp_prev
-                    target.next = tmp_next
+                    sort_target.swap(target.prev, target)
 
                     unsorted_top = unsorted_top_prev.next
 
