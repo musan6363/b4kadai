@@ -1,6 +1,12 @@
 import DoublyLinkedList as dll
 
 
+def swap(swap_target, x, y):
+    tmp = swap_target[y]
+    swap_target[y] = swap_target[x]
+    swap_target[x] = tmp
+
+
 def insert_list_to_dll(list, has_pic=None):
     if has_pic:
         new_dll = dll.DoubleDataDoublyLinkedList()
@@ -107,9 +113,9 @@ def bubble_sort(sort_target):
                 ) or (
                     not has_picture and sort_target[tp] < sort_target[tp-1]
                 ):
-                    tmp = sort_target[tp]
-                    sort_target[tp] = sort_target[tp-1]
-                    sort_target[tp-1] = tmp
+                    # listはミュータブルなので返り値不要で反映される
+                    swap(sort_target, tp-1, tp)
+
                     exist_unsorted_pair = True
                     replace_count += 1
             unsorted_top_position += 1
@@ -176,9 +182,8 @@ def selection_sort(sort_target):
                     tmp_min = i
                     count_flag = True
 
-            tmp = sort_target[unsorted_top_position]
-            sort_target[unsorted_top_position] = sort_target[tmp_min]
-            sort_target[tmp_min] = tmp
+            # listはミュータブルなので返り値不要で反映される
+            swap(sort_target, unsorted_top_position, tmp_min)
 
             if count_flag:
                 replace_count += 1
