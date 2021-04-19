@@ -206,25 +206,9 @@ def selection_sort(sort_target):
                     count_flag = True
                 target = target.next
 
-            # a(unsorted_top) - b - c(tmp_prev) - d(min) - e(tmp_next)  を
-            # d(unsorted_top) - b - c           - a      - e            にする
-            # 改善点: swap関数としてまとめたほうが良いかも．
-            tmp_prev = min.prev
-            tmp_next = min.next
-            unsorted_top.prev.next = min
-            unsorted_top.next.prev = min
-            min.prev = unsorted_top.prev
-            min.next = unsorted_top.next
-            tmp_prev.next = unsorted_top
-            tmp_next.prev = unsorted_top
-            unsorted_top.prev = tmp_prev
-            unsorted_top.next = tmp_next
-
-            # minとunsorted_topが隣り合っていたときの対策
-            # min.nextがmin自身，unsorted_top.prevも自身を指している．
-            if min.next is min:
-                min.next = unsorted_top
-                unsorted_top.prev = min
+            # # a(unsorted_top) - b - c - d(min) - e を
+            # # d(unsorted_top) - b - c - a      - e にする
+            sort_target.swap(unsorted_top, min)
 
             unsorted_top = min.next
             if count_flag:

@@ -74,6 +74,26 @@ class DoublyLinkedList:
         result = result[1:]
         print(result)
 
+    def swap(self, swap_target_x, swap_target_y):
+        # a - x - b - c(tmp_prev) - y - d(tmp_next)  を
+        # a - y - b - c           - x - d            にする
+        tmp_prev = swap_target_y.prev
+        tmp_next = swap_target_y.next
+
+        swap_target_x.prev.next = swap_target_y  # (a -> x)  =>  (a -> y)
+        swap_target_x.next.prev = swap_target_y  # (x <- b)  =>  (y <- b)
+        swap_target_y.prev = swap_target_x.prev  # (c <- y)  =>  (a <- y)
+        swap_target_y.next = swap_target_x.next  # (y -> d)  =>  (y -> b)
+        tmp_prev.next = swap_target_x            # (c -> y)  =>  (c -> x)
+        tmp_next.prev = swap_target_x            # (y <- d)  =>  (x <- d)
+        swap_target_x.prev = tmp_prev            # (a <- x)  =>  (c <- x)
+        swap_target_x.next = tmp_next            # (x -> b)  =>  (x -> d)
+
+        # xとyが隣り合っていたときの対策
+        if swap_target_y.next is swap_target_y:
+            swap_target_y.next = swap_target_x   # (y -> y)  =>  (y -> x)
+            swap_target_x.prev = swap_target_y   # (x <- x)  =>  (y <- x)
+
 
 class DoubleDataDoublyLinkedList(DoublyLinkedList):
     """
