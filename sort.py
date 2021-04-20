@@ -1,12 +1,6 @@
 import DoublyLinkedList as dll
 
 
-def swap(swap_target, x, y):
-    tmp = swap_target[y]
-    swap_target[y] = swap_target[x]
-    swap_target[x] = tmp
-
-
 def insert_list_to_dll(list, has_pic=None):
     if has_pic:
         new_dll = dll.DoubleDataDoublyLinkedList()
@@ -69,10 +63,13 @@ def insertion_sort(sort_target):
             new_target = ct.next
 
             # sortedの後ろにcomparison_targetを挿入
-            # 交換ではなく，挿入なのでswapメソッドは使えない．
-            # a(sorted) - b - c - d(comparison_target) - e を
-            # a         - d - b - c                    - d にする
-            sort_target.insert_move(sorted, ct)
+            # 改善点: swap関数としてまとめたほうが良いかも．
+            ct.prev.next = ct.next
+            ct.next.prev = ct.prev
+            ct.next = sorted.next
+            ct.prev = sorted
+            sorted.next.prev = ct
+            sorted.next = ct
 
             ct = new_target
             sort_target.show()
@@ -113,9 +110,9 @@ def bubble_sort(sort_target):
                 ) or (
                     not has_picture and sort_target[tp] < sort_target[tp-1]
                 ):
-                    # listはミュータブルなので返り値不要で反映される
-                    swap(sort_target, tp-1, tp)
-
+                    tmp = sort_target[tp]
+                    sort_target[tp] = sort_target[tp-1]
+                    sort_target[tp-1] = tmp
                     exist_unsorted_pair = True
                     replace_count += 1
             unsorted_top_position += 1
@@ -134,7 +131,15 @@ def bubble_sort(sort_target):
 
                     # a(tmp_prev) - b(tmp_next) - c(target) - d  を
                     # a           - c           - b         - d  に入れ替える
-                    sort_target.swap(target.prev, target)
+                    # 改善点: swap関数としてまとめたほうが良いかも．
+                    tmp_prev = target.prev.prev
+                    tmp_next = target.prev
+                    target.prev.prev.next = target
+                    target.prev.prev = target
+                    target.prev.next = target.next
+                    target.next.prev = target.prev
+                    target.prev = tmp_prev
+                    target.next = tmp_next
 
                     unsorted_top = unsorted_top_prev.next
 
@@ -182,8 +187,9 @@ def selection_sort(sort_target):
                     tmp_min = i
                     count_flag = True
 
-            # listはミュータブルなので返り値不要で反映される
-            swap(sort_target, unsorted_top_position, tmp_min)
+            tmp = sort_target[unsorted_top_position]
+            sort_target[unsorted_top_position] = sort_target[tmp_min]
+            sort_target[tmp_min] = tmp
 
             if count_flag:
                 replace_count += 1
@@ -200,9 +206,25 @@ def selection_sort(sort_target):
                     count_flag = True
                 target = target.next
 
-            # a(unsorted_top) - b - c - d(min) - e を
-            # d(unsorted_top) - b - c - a      - e にする
-            sort_target.swap(unsorted_top, min)
+            # a(unsorted_top) - b - c(tmp_prev) - d(min) - e(tmp_next)  を
+            # d(unsorted_top) - b - c           - a      - e            にする
+            # 改善点: swap関数としてまとめたほうが良いかも．
+            tmp_prev = min.prev
+            tmp_next = min.next
+            unsorted_top.prev.next = min
+            unsorted_top.next.prev = min
+            min.prev = unsorted_top.prev
+            min.next = unsorted_top.next
+            tmp_prev.next = unsorted_top
+            tmp_next.prev = unsorted_top
+            unsorted_top.prev = tmp_prev
+            unsorted_top.next = tmp_next
+
+            # minとunsorted_topが隣り合っていたときの対策
+            # min.nextがmin自身，unsorted_top.prevも自身を指している．
+            if min.next is min:
+                min.next = unsorted_top
+                unsorted_top.prev = min
 
             unsorted_top = min.next
             if count_flag:
